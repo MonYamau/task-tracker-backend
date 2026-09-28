@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      id: 20260928-04-add-email-column
+      author: MonYamau
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    unique: true
+                    nullable: false

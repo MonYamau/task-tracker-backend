@@ -18,4 +18,13 @@ public class User {
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
+
+    @Column(name = "EMAIL", nullable = false, unique = true)
+    private String email;
+
+    public User(String username, String password, String email) {
+        this.username = username;
+        this.password = password;
+        this.email = email;
+    }
 }

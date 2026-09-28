@@ -25,4 +25,11 @@ public class Task {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "OWNER", referencedColumnName = "ID", nullable = false)
     private User owner;
+
+    public Task(String title, String text, boolean isReady, User owner) {
+        this.title = title;
+        this.text = text;
+        this.isReady = isReady;
+        this.owner = owner;
+    }
 }
