@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      comment: Добавление Foreign Key для таблицы задач
+      id: 20260928-03-add-tasks-fk
+      author: MonYamau
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: tasks
+            baseColumnNames: owner
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_user_id
+
+      rollback:
+        - dropForeignKeyConstraint:
+            baseTableName: tasks
+            constraintName: fk_user_id

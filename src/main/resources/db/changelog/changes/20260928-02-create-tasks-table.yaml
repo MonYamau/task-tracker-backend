@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      comment: Создание таблицы задач
+      id: 20260928-02-create-tasks-table
+      author: MonYamau
+      objectQuotingStrategy: QUOTE_ONLY_RESERVED_WORDS
+      changes:
+        - createTable:
+            tableName: tasks
+            columns:
+              - column:
+                  autoIncrement: true
+                  constraints:
+                    nullable: false
+                    primaryKey: true
+                    primaryKeyName: pk_tasks
+                  name: id
+                  type: INT
+              - column:
+                  name: title
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: text
+                  type: VARCHAR(255)
+              - column:
+                  name: status
+                  type: BOOLEAN
+              - column:
+                  name: owner
+                  type: INT
+                  constraints:
+                    nullable: false
+
+      rollback:
+        - dropTable:
+            tableName: tasks
