@@ -1,0 +1,17 @@
+databaseChangeLog:
+  - changeSet:
+      comment: Добавление колонки time для таблицы задач
+      id: 20260929-05-add-time-column
+      author: MonYamau
+      changes:
+        - addColumn:
+            tableName: tasks
+            columns:
+              - column:
+                  name: time
+                  type: TIMESTAMP
+
+      rollback:
+        - dropColumn:
+            tableName: tasks
+            columnName: time
