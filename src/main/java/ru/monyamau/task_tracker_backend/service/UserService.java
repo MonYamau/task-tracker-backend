@@ -3,6 +3,7 @@ package ru.monyamau.task_tracker_backend.service;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.monyamau.task_tracker_backend.dto.request.UserRequestDto;
@@ -14,27 +15,25 @@ import ru.monyamau.task_tracker_backend.repository.UserRepository;
 @Service
 public class UserService {
     private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Transactional
     public UserResponseDto registerUser(UserRequestDto requestDto) {
         validateUniqueFields(requestDto.username(), requestDto.email());
+        String hashedPassword = passwordEncoder.encode(requestDto.password());
         User savedUser;
         try {
-            savedUser = userRepository.saveAndFlush(new User(requestDto.username(), requestDto.password(), requestDto.email()));
+            savedUser = userRepository.saveAndFlush(new User(requestDto.username(), hashedPassword, requestDto.email()));
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException constraintException) {
                 String constraintName = constraintException.getConstraintName();
-                if (constraintName != null && constraintName.contains("username")) {
-                    throw new UserAlreadyExistsException("Пользователь с именем " + requestDto.username() + " уже существует");
-                }
-                if (constraintName != null && constraintName.contains("email")) {
-                    throw new UserAlreadyExistsException("Пользователь с почтой " + requestDto.email() + " уже существует");
-                }
+                validateConstraintNameForUniqueFields(constraintName, requestDto.username(), requestDto.email());
             }
             throw new UserAlreadyExistsException("Текущий пользователь уже существует");
         }
@@ -46,6 +45,15 @@ public class UserService {
             throw new UserAlreadyExistsException("Пользователь с именем " + username + " уже существует");
         }
         if (userRepository.existsUserByEmail(email)) {
+            throw new UserAlreadyExistsException("Пользователь с почтой " + email + " уже существует");
+        }
+    }
+
+    private void validateConstraintNameForUniqueFields(String constraintName, String username, String email) {
+        if (constraintName != null && constraintName.contains("username")) {
+            throw new UserAlreadyExistsException("Пользователь с именем " + username + " уже существует");
+        }
+        if (constraintName != null && constraintName.contains("email")) {
             throw new UserAlreadyExistsException("Пользователь с почтой " + email + " уже существует");
         }
     }
