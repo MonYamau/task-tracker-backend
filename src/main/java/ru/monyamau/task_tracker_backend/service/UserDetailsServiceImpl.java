@@ -7,7 +7,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import ru.monyamau.task_tracker_backend.entity.User;
 import ru.monyamau.task_tracker_backend.repository.UserRepository;
-import ru.monyamau.task_tracker_backend.security.UserDetailsImpl;
+import ru.monyamau.task_tracker_backend.security.UserPrincipal;
 
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
@@ -22,6 +22,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Не удалось найти пользователя по текущему имени"));
-        return new UserDetailsImpl(user);
+        return new UserPrincipal(user.getId(), user.getUsername(), user.getPassword(), user.getEmail());
     }
 }

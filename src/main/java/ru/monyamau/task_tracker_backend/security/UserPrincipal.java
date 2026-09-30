@@ -8,12 +8,7 @@ import ru.monyamau.task_tracker_backend.entity.User;
 import java.util.Collection;
 import java.util.List;
 
-public class UserDetailsImpl implements UserDetails {
-    private final User user;
-
-    public UserDetailsImpl(User user) {
-        this.user = user;
-    }
+public record UserPrincipal(Integer id, String username, String password, String email) implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -22,11 +17,11 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public String getUsername() {
-        return user.getUsername();
+        return username;
     }
 
     @Override
     public @Nullable String getPassword() {
-        return user.getPassword();
+        return password;
     }
 }
