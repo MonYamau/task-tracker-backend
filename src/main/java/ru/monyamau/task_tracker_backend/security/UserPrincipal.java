@@ -3,7 +3,6 @@ package ru.monyamau.task_tracker_backend.security;
 import org.jspecify.annotations.Nullable;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.monyamau.task_tracker_backend.entity.User;
 
 import java.util.Collection;
 import java.util.List;

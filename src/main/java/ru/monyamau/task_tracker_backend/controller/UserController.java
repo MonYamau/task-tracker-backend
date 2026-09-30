@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.monyamau.task_tracker_backend.api.UserApi;
 import ru.monyamau.task_tracker_backend.dto.request.UserRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.UserResponseDto;
+import ru.monyamau.task_tracker_backend.security.JwtTokenProvider;
 import ru.monyamau.task_tracker_backend.security.UserPrincipal;
 import ru.monyamau.task_tracker_backend.service.UserService;
-import ru.monyamau.task_tracker_backend.security.JwtTokenProvider;
 
 @RestController
 public class UserController implements UserApi {
