@@ -1,6 +1,5 @@
 package ru.monyamau.task_tracker_backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.monyamau.task_tracker_backend.api.UserApi;
@@ -15,7 +14,6 @@ public class UserController implements UserApi {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
     public UserController(UserService userService, JwtTokenProvider jwtTokenProvider) {
         this.userService = userService;
         this.jwtTokenProvider = jwtTokenProvider;

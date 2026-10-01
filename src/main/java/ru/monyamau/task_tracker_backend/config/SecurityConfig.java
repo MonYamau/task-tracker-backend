@@ -1,6 +1,5 @@
 package ru.monyamau.task_tracker_backend.config;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -21,7 +20,6 @@ import ru.monyamau.task_tracker_backend.filter.JwtFilter;
 public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
-    @Autowired
     public SecurityConfig(JwtFilter jwtFilter) {
         this.jwtFilter = jwtFilter;
     }

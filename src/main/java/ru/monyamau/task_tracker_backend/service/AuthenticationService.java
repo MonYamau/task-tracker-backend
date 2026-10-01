@@ -1,6 +1,5 @@
 package ru.monyamau.task_tracker_backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -15,7 +14,6 @@ import ru.monyamau.task_tracker_backend.security.UserPrincipal;
 public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
-    @Autowired
     public AuthenticationService(AuthenticationManager authenticationManager) {
         this.authenticationManager = authenticationManager;
     }

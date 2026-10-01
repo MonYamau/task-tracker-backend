@@ -1,6 +1,5 @@
 package ru.monyamau.task_tracker_backend.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
@@ -19,7 +18,6 @@ public class TaskCollectionService {
     private final TaskRepository taskRepository;
     private final UserRepository userRepository;
 
-    @Autowired
     public TaskCollectionService(TaskRepository taskRepository, UserRepository userRepository) {
         this.taskRepository = taskRepository;
         this.userRepository = userRepository;

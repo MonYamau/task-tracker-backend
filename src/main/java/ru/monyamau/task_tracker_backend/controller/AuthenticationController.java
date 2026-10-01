@@ -1,6 +1,5 @@
 package ru.monyamau.task_tracker_backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.monyamau.task_tracker_backend.api.AuthenticationApi;
@@ -14,7 +13,6 @@ public class AuthenticationController implements AuthenticationApi {
     private final AuthenticationService authenticationService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    @Autowired
     public AuthenticationController(AuthenticationService authenticationService, JwtTokenProvider jwtTokenProvider) {
         this.authenticationService = authenticationService;
         this.jwtTokenProvider = jwtTokenProvider;

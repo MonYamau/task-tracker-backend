@@ -1,6 +1,5 @@
 package ru.monyamau.task_tracker_backend.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +14,6 @@ import ru.monyamau.task_tracker_backend.service.TaskService;
 public class TaskController implements TaskApi {
     private final TaskService taskService;
 
-    @Autowired
     public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
