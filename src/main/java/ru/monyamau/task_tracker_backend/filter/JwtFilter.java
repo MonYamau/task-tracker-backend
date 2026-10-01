@@ -32,9 +32,9 @@ public class JwtFilter extends OncePerRequestFilter {
         String header = request.getHeader("Authorization");
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
-            String username = jwtTokenProvider.authenticateWithToken(token).orElseThrow(() ->
-                    new AuthenticationException("Failed to authenticate user: invalid username"));
-            UserDetails userDetails = userDetailsService.loadUserByUsername(username);
+            String login = jwtTokenProvider.authenticateWithToken(token).orElseThrow(() ->
+                    new AuthenticationException("Не удалось аутентифицировать пользователя: невалидный токен"));
+            UserDetails userDetails = userDetailsService.loadUserByUsername(login);
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities());
             SecurityContextHolder.getContext().setAuthentication(authenticationToken);

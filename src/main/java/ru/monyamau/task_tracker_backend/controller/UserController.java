@@ -24,7 +24,7 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<Void> register(UserRequestDto requestDto) {
         UserResponseDto responseDto = userService.registerUser(requestDto);
-        String token = jwtTokenProvider.createFormattedToken(responseDto.id(), responseDto.username(), responseDto.email());
+        String token = jwtTokenProvider.createFormattedToken(responseDto.id(), responseDto.email());
         return ResponseEntity.ok()
                 .header("Authorization", token)
                 .build();
@@ -32,6 +32,6 @@ public class UserController implements UserApi {
 
     @Override
     public ResponseEntity<UserResponseDto> show(UserPrincipal userPrincipal) {
-        return ResponseEntity.ok(new UserResponseDto(userPrincipal.id(), userPrincipal.username(), userPrincipal.email()));
+        return ResponseEntity.ok(new UserResponseDto(userPrincipal.id(), userPrincipal.email()));
     }
 }

@@ -22,7 +22,7 @@ public class AuthenticationService {
 
     public UserResponseDto authenticateUser(UserRequestDto userRequestDto) {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                userRequestDto.username(), userRequestDto.password());
+                userRequestDto.email(), userRequestDto.password());
         Authentication authentication;
         try {
             authentication = authenticationManager.authenticate(authenticationToken);
@@ -30,6 +30,6 @@ public class AuthenticationService {
             throw new AuthenticationException("Неверное имя пользователя или пароль");
         }
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
-        return new UserResponseDto(principal.id(), principal.username(), principal.email());
+        return new UserResponseDto(principal.id(), principal.email());
     }
 }

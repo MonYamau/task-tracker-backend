@@ -23,7 +23,7 @@ public class AuthenticationController implements AuthenticationApi {
     @Override
     public ResponseEntity<Void> logIn(UserRequestDto requestDto) {
         UserResponseDto responseDto = authenticationService.authenticateUser(requestDto);
-        String token = jwtTokenProvider.createFormattedToken(responseDto.id(), responseDto.username(), responseDto.email());
+        String token = jwtTokenProvider.createFormattedToken(responseDto.id(), responseDto.email());
         return ResponseEntity.ok()
                 .header("Authorization", token)
                 .build();

@@ -19,7 +19,6 @@ public final class JwtTokenProvider {
     private static final String SUBJECT_NAME = "User details";
     private static final String ISSUER_NAME = "task-tracker";
     private static final String ID_CLAIM = "id";
-    private static final String USERNAME_CLAIM = "username";
     private static final String EMAIL_CLAIM = "email";
     private static final String BEARER_TITLE = "Bearer ";
 
@@ -29,13 +28,12 @@ public final class JwtTokenProvider {
         this.secret = secret;
     }
 
-    public String createFormattedToken(Integer id, String username, String email) {
+    public String createFormattedToken(Integer id, String email) {
         ZonedDateTime time = ZonedDateTime.now();
         try {
             String token = JWT.create()
                     .withSubject(SUBJECT_NAME)
                     .withClaim(ID_CLAIM, id)
-                    .withClaim(USERNAME_CLAIM, username)
                     .withClaim(EMAIL_CLAIM, email)
                     .withIssuer(ISSUER_NAME)
                     .withIssuedAt(Date.from(time.toInstant()))
@@ -43,7 +41,7 @@ public final class JwtTokenProvider {
                     .sign(Algorithm.HMAC256(secret));
             return BEARER_TITLE + token;
         } catch (Exception e) {
-            log.error("Не удалось создать JWT токен для пользователя {}", username);
+            log.error("Не удалось создать JWT токен для пользователя {}", email);
             throw new IllegalStateException("Не удалось создать JWT токен для пользователя", e);
         }
     }
@@ -53,13 +51,12 @@ public final class JwtTokenProvider {
                 .withIssuer(ISSUER_NAME)
                 .withSubject(SUBJECT_NAME)
                 .withClaimPresence(ID_CLAIM)
-                .withClaimPresence(USERNAME_CLAIM)
                 .withClaimPresence(EMAIL_CLAIM)
                 .build();
         try {
             return Optional.of(verifier
                     .verify(token)
-                    .getClaim(USERNAME_CLAIM)
+                    .getClaim(EMAIL_CLAIM)
                     .asString());
         } catch (JWTVerificationException e) {
             throw new AuthenticationException("Не удалось аутентифицировать пользователя: токен не валиден");

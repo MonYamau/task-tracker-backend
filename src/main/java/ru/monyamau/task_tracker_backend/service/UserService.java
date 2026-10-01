@@ -25,34 +25,23 @@ public class UserService {
 
     @Transactional
     public UserResponseDto registerUser(UserRequestDto requestDto) {
-        validateUniqueFields(requestDto.username(), requestDto.email());
+        if (userRepository.existsUserByEmail(requestDto.email())) {
+            throw new UserAlreadyExistsException("Пользователь с почтой " + requestDto.email() + " уже существует");
+        }
         String hashedPassword = passwordEncoder.encode(requestDto.password());
         User savedUser;
         try {
-            savedUser = userRepository.saveAndFlush(new User(requestDto.username(), hashedPassword, requestDto.email()));
+            savedUser = userRepository.saveAndFlush(new User(requestDto.email(), hashedPassword));
         } catch (DataIntegrityViolationException e) {
             if (e.getCause() instanceof ConstraintViolationException constraintException) {
-                String constraintName = constraintException.getConstraintName();
-                validateConstraintNameForUniqueFields(constraintName, requestDto.username(), requestDto.email());
+                validateConstraintException(constraintException.getConstraintName(), requestDto.email());
             }
             throw new UserAlreadyExistsException("Текущий пользователь уже существует");
         }
-        return new UserResponseDto(savedUser.getId(), savedUser.getUsername(), savedUser.getEmail());
+        return new UserResponseDto(savedUser.getId(), savedUser.getEmail());
     }
 
-    private void validateUniqueFields(String username, String email) {
-        if (userRepository.existsUserByUsername(username)) {
-            throw new UserAlreadyExistsException("Пользователь с именем " + username + " уже существует");
-        }
-        if (userRepository.existsUserByEmail(email)) {
-            throw new UserAlreadyExistsException("Пользователь с почтой " + email + " уже существует");
-        }
-    }
-
-    private void validateConstraintNameForUniqueFields(String constraintName, String username, String email) {
-        if (constraintName != null && constraintName.contains("username")) {
-            throw new UserAlreadyExistsException("Пользователь с именем " + username + " уже существует");
-        }
+    private void validateConstraintException(String constraintName, String email) {
         if (constraintName != null && constraintName.contains("email")) {
             throw new UserAlreadyExistsException("Пользователь с почтой " + email + " уже существует");
         }

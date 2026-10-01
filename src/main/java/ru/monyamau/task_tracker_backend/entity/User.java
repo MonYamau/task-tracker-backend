@@ -15,18 +15,14 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "USERNAME", nullable = false, unique = true)
-    private String username;
+    @Column(name = "EMAIL", nullable = false, unique = true)
+    private String email;
 
     @Column(name = "PASSWORD", nullable = false)
     private String password;
 
-    @Column(name = "EMAIL", nullable = false, unique = true)
-    private String email;
-
-    public User(String username, String password, String email) {
-        this.username = username;
-        this.password = password;
+    public User(String email, String password) {
         this.email = email;
+        this.password = password;
     }
 }

@@ -1,0 +1,19 @@
+databaseChangeLog:
+  - changeSet:
+      comment: Удаление колонки username из таблицы пользователей
+      id: 20261001-08-remove-username-column
+      author: MonYamau
+      changes:
+        - dropColumn:
+            tableName: users
+            columnName: username
+      rollback:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: username
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
