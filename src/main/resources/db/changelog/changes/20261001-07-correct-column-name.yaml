@@ -1,0 +1,10 @@
+databaseChangeLog:
+  - changeSet:
+      comment: Исправление имени колонки для таблицы задач
+      id: 20261001-07-correct-column-name
+      author: MonYamau
+      changes:
+        - renameColumn:
+            tableName: tasks
+            oldColumnName: time
+            newColumnName: completed_at

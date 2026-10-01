@@ -26,7 +26,7 @@ public class Task {
     @Column(name = "STATUS")
     private boolean isReady;
 
-    @Column(name = "TIME")
+    @Column(name = "COMPLETED_AT")
     private OffsetDateTime completedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -39,5 +39,12 @@ public class Task {
         this.isReady = isReady;
         this.completedAt = completedAt;
         this.owner = owner;
+    }
+
+    public void update(String title, String text, boolean isReady, OffsetDateTime completedAt) {
+        this.title = title;
+        this.text = text;
+        this.isReady = isReady;
+        this.completedAt = completedAt;
     }
 }
