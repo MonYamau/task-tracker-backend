@@ -6,26 +6,27 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.monyamau.task_tracker_backend.dto.request.UserRequestDto;
-import ru.monyamau.task_tracker_backend.dto.response.UserResponseDto;
+import ru.monyamau.task_tracker_backend.dto.response.TokenResponseDto;
 import ru.monyamau.task_tracker_backend.entity.User;
 import ru.monyamau.task_tracker_backend.exception.UserAlreadyExistsException;
 import ru.monyamau.task_tracker_backend.repository.UserRepository;
+import ru.monyamau.task_tracker_backend.security.JwtTokenProvider;
 
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtTokenProvider jwtTokenProvider) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtTokenProvider = jwtTokenProvider;
     }
 
     @Transactional
-    public UserResponseDto registerUser(UserRequestDto requestDto) {
-        if (userRepository.existsUserByEmail(requestDto.email())) {
-            throw new UserAlreadyExistsException("Пользователь с почтой " + requestDto.email() + " уже существует");
-        }
+    public TokenResponseDto registerUser(UserRequestDto requestDto) {
+        checkEmailForUniqueness(requestDto.email());
         String hashedPassword = passwordEncoder.encode(requestDto.password());
         User savedUser;
         try {
@@ -36,7 +37,14 @@ public class UserService {
             }
             throw new UserAlreadyExistsException("Текущий пользователь уже существует");
         }
-        return new UserResponseDto(savedUser.getId(), savedUser.getEmail());
+        String token = jwtTokenProvider.createFormattedToken(savedUser.getId(), savedUser.getEmail());
+        return new TokenResponseDto(token);
+    }
+
+    private void checkEmailForUniqueness(String email) {
+        if (userRepository.existsUserByEmail(email)) {
+            throw new UserAlreadyExistsException("Пользователь с почтой " + email + " уже существует");
+        }
     }
 
     private void validateConstraintException(String constraintName, String email) {
