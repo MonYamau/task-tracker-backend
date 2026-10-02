@@ -1,5 +1,6 @@
 package ru.monyamau.task_tracker_backend.controller;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.monyamau.task_tracker_backend.api.UserApi;
@@ -20,7 +21,7 @@ public class UserController implements UserApi {
     @Override
     public ResponseEntity<Void> register(UserRequestDto requestDto) {
         TokenResponseDto responseDto = userService.registerUser(requestDto);
-        return ResponseEntity.ok()
+        return ResponseEntity.status(HttpStatus.CREATED)
                 .header("Authorization", responseDto.token())
                 .build();
     }
