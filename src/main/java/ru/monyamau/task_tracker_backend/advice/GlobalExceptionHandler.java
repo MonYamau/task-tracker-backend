@@ -8,12 +8,20 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.monyamau.task_tracker_backend.dto.response.ErrorDto;
 import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 import ru.monyamau.task_tracker_backend.exception.TaskNotFoundException;
 import ru.monyamau.task_tracker_backend.exception.UserAlreadyExistsException;
 
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    @ExceptionHandler(InvalidInputException.class)
+    public ResponseEntity<ErrorDto> handleInvalidInputException(Exception e) {
+        log.warn("Ошибка некорректного ввода пользователя: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErrorDto(e.getMessage()));
+    }
+
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorDto> handleAuthenticationException(Exception e) {
         log.warn("Ошибка аутентификации пользователя: {}", e.getMessage());
