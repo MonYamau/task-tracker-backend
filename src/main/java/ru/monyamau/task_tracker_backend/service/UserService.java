@@ -35,7 +35,7 @@ public class UserService {
             if (e.getCause() instanceof ConstraintViolationException constraintException) {
                 validateConstraintException(constraintException.getConstraintName(), requestDto.email());
             }
-            throw new UserAlreadyExistsException("Текущий пользователь уже существует");
+            throw new IllegalStateException("Не удалось зарегистрировать пользователя", e);
         }
         String token = jwtTokenProvider.createFormattedToken(savedUser.getId(), savedUser.getEmail());
         return new TokenResponseDto(token);
