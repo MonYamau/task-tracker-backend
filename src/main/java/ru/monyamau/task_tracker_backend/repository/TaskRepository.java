@@ -12,7 +12,5 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Integer> {
     Optional<Task> findTaskByIdAndOwnerId(Integer id, Integer ownerId);
 
-    void deleteByIdAndOwnerId(Integer id, Integer ownerId);
-
     List<Task> findAllByOwner(User owner);
 }
