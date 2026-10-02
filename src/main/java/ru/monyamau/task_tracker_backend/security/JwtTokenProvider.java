@@ -4,10 +4,13 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
+import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -41,12 +44,11 @@ public final class JwtTokenProvider {
                     .sign(Algorithm.HMAC256(secret));
             return BEARER_TITLE + token;
         } catch (Exception e) {
-            log.error("Не удалось создать JWT токен для пользователя {}", email);
             throw new IllegalStateException("Не удалось создать JWT токен для пользователя", e);
         }
     }
 
-    public Optional<String> authenticateWithToken(String token) {
+    public Optional<UserPrincipal> authenticateWithToken(String token) {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
                 .withIssuer(ISSUER_NAME)
                 .withSubject(SUBJECT_NAME)
@@ -54,12 +56,14 @@ public final class JwtTokenProvider {
                 .withClaimPresence(EMAIL_CLAIM)
                 .build();
         try {
-            return Optional.of(verifier
-                    .verify(token)
-                    .getClaim(EMAIL_CLAIM)
-                    .asString());
+            DecodedJWT decodedJWT = verifier.verify(token);
+            String email = decodedJWT.getClaim(EMAIL_CLAIM).asString();
+            Integer id = decodedJWT.getClaim(ID_CLAIM).asInt();
+            return Optional.of(new UserPrincipal(id, email, null));
+        } catch (TokenExpiredException e) {
+            throw new AuthenticationException("Не удалось аутентифицировать пользователя: срок действия токена истёк");
         } catch (JWTVerificationException e) {
-            throw new AuthenticationException("Не удалось аутентифицировать пользователя: токен не валиден");
+            throw new InvalidInputException("Не удалось аутентифицировать пользователя: токен не валиден");
         }
     }
 }
