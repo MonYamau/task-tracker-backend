@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -41,10 +42,16 @@ public class Task {
         this.owner = owner;
     }
 
-    public void update(String title, String text, boolean isReady, OffsetDateTime completedAt) {
+    public void update(String title, String text, boolean isReady) {
         this.title = title;
         this.text = text;
-        this.isReady = isReady;
-        this.completedAt = completedAt;
+        if (!this.isReady && isReady) {
+            this.isReady = true;
+            this.completedAt = OffsetDateTime.now(ZoneOffset.UTC);
+        }
+        if (this.isReady && !isReady) {
+            this.isReady = false;
+            this.completedAt = null;
+        }
     }
 }

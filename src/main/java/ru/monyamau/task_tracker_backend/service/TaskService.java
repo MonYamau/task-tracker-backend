@@ -42,8 +42,7 @@ public class TaskService {
     public TaskResponseDto updateTask(Integer userId, TaskRefRequestDto refRequestDto, TaskFormRequestDto formRequestDto) {
         Task task = taskRepository.findTaskByIdAndOwnerId(refRequestDto.id(), userId).orElseThrow(() ->
                 new TaskNotFoundException("Не удалось найти задачу"));
-        task.update(formRequestDto.title(), formRequestDto.text(),
-                formRequestDto.isReady(), formRequestDto.completedAt());
+        task.update(formRequestDto.title(), formRequestDto.text(), formRequestDto.isReady());
         return taskMapper.toDto(task);
     }
 
