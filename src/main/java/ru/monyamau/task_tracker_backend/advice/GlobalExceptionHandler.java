@@ -1,10 +1,15 @@
 package ru.monyamau.task_tracker_backend.advice;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jspecify.annotations.Nullable;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.monyamau.task_tracker_backend.dto.response.ErrorDto;
 import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
@@ -15,6 +20,17 @@ import ru.monyamau.task_tracker_backend.exception.UserAlreadyExistsException;
 @Slf4j
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
+    @Override
+    protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        ErrorDto errorDto = new ErrorDto("Validation error");
+        if (ex.getBindingResult().getFieldError() != null) {
+            errorDto = new ErrorDto(ex.getBindingResult().getFieldError().getDefaultMessage());
+        }
+        log.warn("Validation error: {}", errorDto.message());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(errorDto);
+    }
+
     @ExceptionHandler(InvalidInputException.class)
     public ResponseEntity<ErrorDto> handleInvalidInputException(Exception e) {
         log.warn("Ошибка некорректного ввода пользователя: {}", e.getMessage());
