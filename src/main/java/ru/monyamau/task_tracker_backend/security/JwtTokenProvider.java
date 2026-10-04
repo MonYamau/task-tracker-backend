@@ -18,7 +18,7 @@ import java.util.Optional;
 
 @Slf4j
 @Component
-public final class JwtTokenProvider {
+public class JwtTokenProvider {
     private static final String SUBJECT_NAME = "User details";
     private static final String ISSUER_NAME = "task-tracker";
     private static final String ID_CLAIM = "id";
@@ -26,9 +26,11 @@ public final class JwtTokenProvider {
     private static final String BEARER_TITLE = "Bearer ";
 
     private final String secret;
+    private final long ttlMinutes;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secret) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secret, @Value("${jwt.ttl-minutes}") long ttlMinutes) {
         this.secret = secret;
+        this.ttlMinutes = ttlMinutes;
     }
 
     public String createFormattedToken(Integer id, String email) {
@@ -40,7 +42,7 @@ public final class JwtTokenProvider {
                     .withClaim(EMAIL_CLAIM, email)
                     .withIssuer(ISSUER_NAME)
                     .withIssuedAt(Date.from(time.toInstant()))
-                    .withExpiresAt(Date.from(time.plusMinutes(60).toInstant()))
+                    .withExpiresAt(Date.from(time.plusMinutes(ttlMinutes).toInstant()))
                     .sign(Algorithm.HMAC256(secret));
             return BEARER_TITLE + token;
         } catch (Exception e) {
