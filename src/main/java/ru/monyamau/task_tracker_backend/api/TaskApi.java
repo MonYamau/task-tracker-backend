@@ -45,7 +45,7 @@ public interface TaskApi {
     ResponseEntity<TaskResponseDto> create(@AuthenticationPrincipal @Parameter(hidden = true) UserPrincipal userPrincipal,
                                            @Valid @RequestBody TaskFormRequestDto requestDto);
 
-    @PostMapping("/edit")
+    @PatchMapping
     @Operation(summary = "Изменить персональную задачу пользователя")
     @ApiResponse(responseCode = "200", description = "Успешный запрос на изменение задачи")
     @ApiResponse(responseCode = "400", description = "Ошибка валидации входных параметров",
