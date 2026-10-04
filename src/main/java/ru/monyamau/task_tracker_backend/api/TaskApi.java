@@ -26,6 +26,8 @@ public interface TaskApi {
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     @ApiResponse(responseCode = "401", description = "Пользователь неавторизован",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
+    @ApiResponse(responseCode = "404", description = "Не удалось найти персональную задачу",
+            content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     @ApiResponse(responseCode = "500", description = "Ошибка на стороне сервера",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     ResponseEntity<TaskResponseDto> show(@AuthenticationPrincipal @Parameter(hidden = true) UserPrincipal userPrincipal,
@@ -50,6 +52,8 @@ public interface TaskApi {
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     @ApiResponse(responseCode = "401", description = "Пользователь неавторизован",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
+    @ApiResponse(responseCode = "404", description = "Не удалось найти персональную задачу",
+            content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     @ApiResponse(responseCode = "500", description = "Ошибка на стороне сервера",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     ResponseEntity<TaskResponseDto> edit(@AuthenticationPrincipal @Parameter(hidden = true) UserPrincipal userPrincipal,
@@ -62,6 +66,8 @@ public interface TaskApi {
     @ApiResponse(responseCode = "400", description = "Ошибка валидации входных параметров",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     @ApiResponse(responseCode = "401", description = "Пользователь неавторизован",
+            content = @Content(schema = @Schema(implementation = ErrorDto.class)))
+    @ApiResponse(responseCode = "404", description = "Не удалось найти персональную задачу",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     @ApiResponse(responseCode = "500", description = "Ошибка на стороне сервера",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
