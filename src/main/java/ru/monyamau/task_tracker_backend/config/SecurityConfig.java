@@ -30,8 +30,13 @@ public class SecurityConfig {
                 .sessionManagement(managementConfigurer ->
                         managementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(matcherRegistry ->
-                        matcherRegistry.requestMatchers("/auth/**").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/user").permitAll()
+                        matcherRegistry
+                                .requestMatchers("/auth/**")
+                                .permitAll()
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html")
+                                .permitAll()
+                                .requestMatchers(HttpMethod.POST, "/user")
+                                .permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
