@@ -3,7 +3,6 @@ package ru.monyamau.task_tracker_backend.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import ru.monyamau.task_tracker_backend.entity.Task;
-import ru.monyamau.task_tracker_backend.entity.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -12,5 +11,5 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Integer> {
     Optional<Task> findTaskByIdAndOwnerId(Integer id, Integer ownerId);
 
-    List<Task> findAllByOwner(User owner);
+    List<Task> findAllByOwnerId(Integer ownerId);
 }
