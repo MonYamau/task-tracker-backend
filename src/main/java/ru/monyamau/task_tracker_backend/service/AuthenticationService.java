@@ -1,5 +1,6 @@
 package ru.monyamau.task_tracker_backend.service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -11,6 +12,7 @@ import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
 import ru.monyamau.task_tracker_backend.security.JwtTokenProvider;
 import ru.monyamau.task_tracker_backend.security.UserPrincipal;
 
+@Slf4j
 @Service
 public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
@@ -32,6 +34,7 @@ public class AuthenticationService {
         }
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         String token = jwtTokenProvider.createFormattedToken(principal.id(), principal.email());
+        log.info("Успешная аутентификация и создание токена для пользователя с ID: {}", principal.id());
         return new TokenResponseDto(token);
     }
 }
