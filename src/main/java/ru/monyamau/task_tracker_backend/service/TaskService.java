@@ -59,7 +59,7 @@ public class TaskService {
     public void deleteTask(Integer userId, TaskRefRequestDto requestDto) {
         Task task = taskRepository.findTaskByIdAndOwnerId(requestDto.id(), userId).orElseThrow(() ->
                 new TaskNotFoundException("Не удалось найти задачу"));
-        log.info("Пользователь с ID {} успешно удалил персональную задачу с ID {}", userId, task.getId());
         taskRepository.delete(task);
+        log.info("Пользователь с ID {} успешно удалил персональную задачу с ID {}", userId, task.getId());
     }
 }

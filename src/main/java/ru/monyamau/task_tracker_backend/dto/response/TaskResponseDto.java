@@ -15,7 +15,7 @@ public record TaskResponseDto(
         String title,
         @Schema(description = "Описание персональной задачи", example = "Купить молоко, хлеб, дом")
         String text,
-        @Schema(description = "Статус готовности персональной задачи", example = "false")
+        @Schema(description = "Статус готовности персональной задачи")
         boolean isReady,
         @JsonInclude(NON_NULL)
         @Schema(description = "Время выполнения персональной задачи")
