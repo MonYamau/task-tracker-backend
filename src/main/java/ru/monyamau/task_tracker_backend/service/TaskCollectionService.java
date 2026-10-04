@@ -5,6 +5,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
 import ru.monyamau.task_tracker_backend.entity.Task;
 import ru.monyamau.task_tracker_backend.entity.User;
+import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
 import ru.monyamau.task_tracker_backend.mapper.TaskMapper;
 import ru.monyamau.task_tracker_backend.repository.TaskRepository;
 import ru.monyamau.task_tracker_backend.repository.UserRepository;
@@ -27,9 +28,11 @@ public class TaskCollectionService {
     }
 
     public List<TaskResponseDto> findAll(Integer userId) {
-        User currentUser = userRepository.findUserById(userId).orElseThrow(() ->
-                new IllegalStateException("Не удалось найти актуального пользователя с ID: " + userId));
-        List<Task> tasks = taskRepository.findAllByOwner(currentUser);
+        if (!userRepository.existsById(userId)) {
+            throw new AuthenticationException("Не удалось найти пользователя по текущему токену");
+        }
+        User user = userRepository.getReferenceById(userId);
+        List<Task> tasks = taskRepository.findAllByOwner(user);
         if (tasks.isEmpty()) {
             return new ArrayList<>();
         }
