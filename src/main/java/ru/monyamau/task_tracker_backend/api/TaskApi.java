@@ -19,7 +19,7 @@ import ru.monyamau.task_tracker_backend.security.UserPrincipal;
 @RequestMapping("/task")
 @Tag(name = "Персональная задача", description = "Управление персональной задачей пользователя")
 public interface TaskApi {
-    @GetMapping
+    @GetMapping("/{id}")
     @Operation(summary = "Найти персональную задачу пользователя")
     @ApiResponse(responseCode = "200", description = "Успешный запрос на получение информации о задаче")
     @ApiResponse(responseCode = "400", description = "Ошибка валидации входных параметров",
@@ -45,7 +45,7 @@ public interface TaskApi {
     ResponseEntity<TaskResponseDto> create(@AuthenticationPrincipal @Parameter(hidden = true) UserPrincipal userPrincipal,
                                            @Valid @RequestBody TaskFormRequestDto requestDto);
 
-    @PatchMapping
+    @PatchMapping("/{id}")
     @Operation(summary = "Изменить персональную задачу пользователя")
     @ApiResponse(responseCode = "200", description = "Успешный запрос на изменение задачи")
     @ApiResponse(responseCode = "400", description = "Ошибка валидации входных параметров",
@@ -60,7 +60,7 @@ public interface TaskApi {
                                          @Valid @ModelAttribute(name = "id") TaskRefRequestDto refRequestDto,
                                          @Valid @RequestBody TaskFormRequestDto formRequestDto);
 
-    @DeleteMapping
+    @DeleteMapping("/{id}")
     @Operation(summary = "Удалить персональную задачу пользователя")
     @ApiResponse(responseCode = "204", description = "Успешный запрос на удаление задачи")
     @ApiResponse(responseCode = "400", description = "Ошибка валидации входных параметров",
