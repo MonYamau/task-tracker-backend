@@ -101,6 +101,10 @@ public class TaskServiceTest extends BaseTestContext {
                 new TaskFormRequestDto(testTaskOfFirstUser.getTitle(), testTaskOfFirstUser.getText(), true));
         Assertions.assertNotNull(testTaskOfFirstUser.getCompletedAt());
         Assertions.assertNotNull(responseDto.completedAt());
+        TaskResponseDto responseDto1 = taskService.updateTask(firstUserId, new TaskRefRequestDto(testTaskOfFirstUser.getId()),
+                new TaskFormRequestDto(testTaskOfFirstUser.getTitle(), testTaskOfFirstUser.getText(), false));
+        Assertions.assertNull(responseDto1.completedAt());
+        Assertions.assertNull(testTaskOfFirstUser.getCompletedAt());
     }
 
     @Test
