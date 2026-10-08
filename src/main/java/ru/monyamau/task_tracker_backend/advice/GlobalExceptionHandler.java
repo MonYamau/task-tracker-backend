@@ -6,6 +6,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -38,12 +39,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(new ErrorDto(e.getMessage()));
     }
 
-    @ExceptionHandler(AuthenticationException.class)
     @ExceptionHandler({CustomAuthenticationException.class,
+            AuthenticationException.class})
     public ResponseEntity<ErrorDto> handleAuthenticationException(Exception e) {
-        log.warn("Ошибка аутентификации пользователя: {}", e.getMessage());
+        String message = e.getMessage();
+        if (e instanceof AuthenticationException) {
+            message = "Для доступа к этому ресурсу требуется полная аутентификация";
+        }
+        log.warn("Ошибка аутентификации пользователя: {}", message);
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErrorDto(e.getMessage()));
+                .body(new ErrorDto(message));
     }
 
     @ExceptionHandler(TaskNotFoundException.class)
