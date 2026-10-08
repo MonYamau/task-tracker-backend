@@ -8,7 +8,7 @@ import ru.monyamau.task_tracker_backend.dto.request.TaskRefRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
 import ru.monyamau.task_tracker_backend.entity.Task;
 import ru.monyamau.task_tracker_backend.entity.User;
-import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 import ru.monyamau.task_tracker_backend.exception.TaskNotFoundException;
 import ru.monyamau.task_tracker_backend.mapper.TaskMapper;
 import ru.monyamau.task_tracker_backend.repository.TaskRepository;
@@ -38,7 +38,7 @@ public class TaskService {
     public TaskResponseDto saveTask(Integer userId, TaskFormRequestDto requestDto) {
         if (!userRepository.existsById(userId)) {
             log.warn("Пользователь с ID {} прошёл аутентификацию фильтра, но отсутствует в базе данных", userId);
-            throw new AuthenticationException("Не удалось найти пользователя по текущему токену");
+            throw new CustomAuthenticationException("Не удалось найти пользователя по текущему токену");
         }
         User user = userRepository.getReferenceById(userId);
         Task savedTask = taskRepository.saveAndFlush(new Task(requestDto.title(), requestDto.text(), false, user, null));

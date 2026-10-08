@@ -9,7 +9,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 
 import java.time.ZonedDateTime;
@@ -63,7 +63,7 @@ public class JwtTokenProvider {
             Integer id = decodedJWT.getClaim(ID_CLAIM).asInt();
             return Optional.of(new UserPrincipal(id, email, null));
         } catch (TokenExpiredException e) {
-            throw new AuthenticationException("Не удалось аутентифицировать пользователя: срок действия токена истёк");
+            throw new CustomAuthenticationException("Не удалось аутентифицировать пользователя: срок действия токена истёк");
         } catch (JWTVerificationException e) {
             throw new InvalidInputException("Не удалось аутентифицировать пользователя: токен не валиден");
         }

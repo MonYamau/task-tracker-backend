@@ -3,7 +3,7 @@ package ru.monyamau.task_tracker_backend.security;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 
 public class JwtTokenProviderTest {
@@ -26,7 +26,7 @@ public class JwtTokenProviderTest {
         JwtTokenProvider tokenProvider = new JwtTokenProvider("secret", 0);
         String token = tokenProvider.createFormattedToken(1, email);
         Assertions.assertTrue(token != null && !token.isBlank());
-        Assertions.assertThrows(AuthenticationException.class, () -> tokenProvider.authenticateWithToken(token.substring(7)));
+        Assertions.assertThrows(CustomAuthenticationException.class, () -> tokenProvider.authenticateWithToken(token.substring(7)));
     }
 
     @Test

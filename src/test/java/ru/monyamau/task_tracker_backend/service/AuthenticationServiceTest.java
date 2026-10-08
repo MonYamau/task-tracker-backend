@@ -8,7 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.monyamau.task_tracker_backend.BaseTestContext;
 import ru.monyamau.task_tracker_backend.dto.request.UserRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.TokenResponseDto;
-import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 import ru.monyamau.task_tracker_backend.security.JwtTokenProvider;
 import ru.monyamau.task_tracker_backend.security.UserPrincipal;
 
@@ -43,7 +43,7 @@ public class AuthenticationServiceTest extends BaseTestContext {
     @Transactional
     void shouldThrowAuthenticationException() {
         String incorrectPassword = "12345678!";
-        Assertions.assertThrows(AuthenticationException.class,
+        Assertions.assertThrows(CustomAuthenticationException.class,
                 () -> authenticationService.authenticateUser(new UserRequestDto(email, incorrectPassword)));
     }
 }

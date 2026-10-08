@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.monyamau.task_tracker_backend.dto.response.ErrorDto;
-import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 import ru.monyamau.task_tracker_backend.exception.TaskNotFoundException;
 import ru.monyamau.task_tracker_backend.exception.UserAlreadyExistsException;
@@ -39,6 +39,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(AuthenticationException.class)
+    @ExceptionHandler({CustomAuthenticationException.class,
     public ResponseEntity<ErrorDto> handleAuthenticationException(Exception e) {
         log.warn("Ошибка аутентификации пользователя: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)

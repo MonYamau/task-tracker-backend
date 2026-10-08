@@ -8,7 +8,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import ru.monyamau.task_tracker_backend.dto.request.UserRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.TokenResponseDto;
-import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 import ru.monyamau.task_tracker_backend.security.JwtTokenProvider;
 import ru.monyamau.task_tracker_backend.security.UserPrincipal;
 
@@ -30,7 +30,7 @@ public class AuthenticationService {
         try {
             authentication = authenticationManager.authenticate(authenticationToken);
         } catch (BadCredentialsException e) {
-            throw new AuthenticationException("Неверное имя пользователя или пароль");
+            throw new CustomAuthenticationException("Неверное имя пользователя или пароль");
         }
         UserPrincipal principal = (UserPrincipal) authentication.getPrincipal();
         String token = jwtTokenProvider.createFormattedToken(principal.id(), principal.email());

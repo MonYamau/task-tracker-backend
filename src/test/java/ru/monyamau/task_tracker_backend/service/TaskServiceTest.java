@@ -11,7 +11,7 @@ import ru.monyamau.task_tracker_backend.dto.request.TaskRefRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
 import ru.monyamau.task_tracker_backend.entity.Task;
 import ru.monyamau.task_tracker_backend.entity.User;
-import ru.monyamau.task_tracker_backend.exception.AuthenticationException;
+import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 import ru.monyamau.task_tracker_backend.exception.TaskNotFoundException;
 import ru.monyamau.task_tracker_backend.repository.TaskRepository;
 import ru.monyamau.task_tracker_backend.repository.UserRepository;
@@ -54,7 +54,7 @@ public class TaskServiceTest extends BaseTestContext {
     @Test
     void shouldThrowAuthenticationExceptionForSaveMethod() {
         Integer incorrectId = 10;
-        Assertions.assertThrows(AuthenticationException.class, () -> taskService.saveTask(incorrectId,
+        Assertions.assertThrows(CustomAuthenticationException.class, () -> taskService.saveTask(incorrectId,
                 new TaskFormRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.isReady())));
     }
 
