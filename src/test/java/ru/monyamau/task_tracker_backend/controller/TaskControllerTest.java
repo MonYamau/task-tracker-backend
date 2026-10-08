@@ -55,7 +55,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    void shouldReturn400InvalidInputWithIncorrectId() throws Exception {
+    void shouldReturn400InvalidInputWithIncorrectIdForFindMethod() throws Exception {
         UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
 
         mockMvc.perform(get("/task/{id}", "X")
@@ -67,7 +67,7 @@ public class TaskControllerTest {
     }
 
     @Test
-    void shouldReturn400InvalidInputWithNullNumberId() throws Exception {
+    void shouldReturn400InvalidInputWithNullNumberIdForFindMethod() throws Exception {
         UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
 
         mockMvc.perform(get("/task/{id}", 0)
@@ -184,6 +184,21 @@ public class TaskControllerTest {
     }
 
     @Test
+    void shouldReturn400InvalidInputWithNullNumberIdForChangeMethod() throws Exception {
+        UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
+        TaskFormRequestDto requestDto = new TaskFormRequestDto("test", "test", false);
+
+        mockMvc.perform(patch("/task/{id}", 0)
+                        .with(user(userPrincipal))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message").value("Идентификатор должен быть натуральным числом"));
+
+        Mockito.verifyNoInteractions(taskService);
+    }
+
+    @Test
     void shouldReturn401UnauthorizedWithoutAuthenticationForChangeMethod() throws Exception {
         TaskFormRequestDto requestDto = new TaskFormRequestDto("test", "test", false);
 
@@ -226,6 +241,18 @@ public class TaskControllerTest {
 
         Mockito.verify(taskService, Mockito.times(1))
                 .deleteTask(userPrincipal.id(), new TaskRefRequestDto(1));
+    }
+
+    @Test
+    void shouldReturn400InvalidInputWithNegativeNumberIdForDeleteMethod() throws Exception {
+        UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
+
+        mockMvc.perform(delete("/task/{id}", -1)
+                        .with(user(userPrincipal)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("message").value("Идентификатор должен быть натуральным числом"));
+
+        Mockito.verifyNoInteractions(taskService);
     }
 
     @Test

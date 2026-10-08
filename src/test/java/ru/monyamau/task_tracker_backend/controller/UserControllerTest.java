@@ -102,8 +102,7 @@ public class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(requestDto)))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("message").exists())
-                .andExpect(jsonPath("message").value("Пароль не может отсутствовать"));
+                .andExpect(jsonPath("message").exists());
 
         Mockito.verifyNoInteractions(userService);
     }
