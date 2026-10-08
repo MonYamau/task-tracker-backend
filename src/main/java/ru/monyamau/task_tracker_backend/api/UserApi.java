@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirements;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,7 +32,7 @@ public interface UserApi {
     @ApiResponse(responseCode = "500", description = "Ошибка на стороне сервера",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     @SecurityRequirements
-    ResponseEntity<Void> register(@RequestBody UserRequestDto requestDto);
+    ResponseEntity<Void> register(@Valid @RequestBody UserRequestDto requestDto);
 
     @GetMapping
     @Operation(summary = "Получить текущего пользователя")
