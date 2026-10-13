@@ -23,21 +23,20 @@ public class KafkaLetterProducer implements LetterPublisher {
     }
 
     @Override
-    public void sendLetter(LetterMessageDto messageDto) {
+    public void publishLetterTask(LetterMessageDto messageDto) {
         try {
             kafkaTemplate.send(topic, messageDto).get(5, TimeUnit.SECONDS);
-            log.info("Запрос на отправку письма зарегистрированному пользователю {} направлен успешно", messageDto.recipient());
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-            throw new LetterPublisherException("Возникла ошибка потока при попытке направить запрос", e);
+            throw new LetterPublisherException("Попытка публикации задачи для отправки письма в Kafka была прервана", e);
         } catch (TimeoutException e) {
-            throw new LetterPublisherException("Не удалось получить подтверждение от Kafka о получении", e);
+            throw new LetterPublisherException("Не удалось получить подтверждение от Kafka о получении задачи", e);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
-            throw new LetterPublisherException("Не удалось направить запрос на отправку письма", cause);
+            throw new LetterPublisherException("Не удалось опубликовать задачу отправки письма в Kafka", cause);
         } catch (Exception e) {
             throw new LetterPublisherException(
-                    "Ошибка при отправке запроса в Kafka", e);
+                    "Ошибка при попытке опубликовать задачу для отправки письма в Kafka", e);
         }
     }
 }

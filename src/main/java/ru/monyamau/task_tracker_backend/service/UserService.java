@@ -37,12 +37,12 @@ public class UserService {
     public TokenResponseDto registerUser(UserRequestDto requestDto) {
         String hashedPassword = passwordEncoder.encode(requestDto.password());
         User savedUser = saveUser(requestDto.email(), hashedPassword);
-        LetterMessageDto messageDto = LetterCreator.createLetter(requestDto.email());
+        LetterMessageDto messageDto = LetterCreator.createRegistrationLetter(requestDto.email());
         try {
-            letterPublisher.sendLetter(messageDto);
+            letterPublisher.publishLetterTask(messageDto);
+            log.info("Задача по отправке письма пользователю с ID {} направлена успешно", savedUser.getId());
         } catch (LetterPublisherException e) {
-            log.error("Не удалось подтвердить отправку письма для зарегистрированного пользователя с ID {}",
-                    savedUser.getId(), e);
+            log.error("Не удалось подтвердить отправку задачи на рассылку письма для зарегистрированного пользователя с ID {}", savedUser.getId(), e);
         }
         String token = jwtTokenProvider.createFormattedToken(savedUser.getId(), savedUser.getEmail());
         log.info("Успешная регистрация для пользователя с ID: {}", savedUser.getId());
