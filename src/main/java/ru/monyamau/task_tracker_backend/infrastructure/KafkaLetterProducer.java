@@ -1,6 +1,5 @@
 package ru.monyamau.task_tracker_backend.infrastructure;
 
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -11,7 +10,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-@Slf4j
 @Component
 public class KafkaLetterProducer implements LetterPublisher {
     private final KafkaTemplate<String, LetterMessageDto> kafkaTemplate;
