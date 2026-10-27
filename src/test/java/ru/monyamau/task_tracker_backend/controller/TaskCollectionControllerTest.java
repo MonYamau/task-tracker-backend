@@ -37,7 +37,7 @@ public class TaskCollectionControllerTest {
     @Test
     void shouldShowTasksSuccessfully() throws Exception {
         UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
-        TaskResponseDto responseDto = new TaskResponseDto(1, "test", "test", false, null);
+        TaskResponseDto responseDto = new TaskResponseDto(1, "test", "test", false, null, null);
         List<TaskResponseDto> tasks = List.of(responseDto);
 
         Mockito.when(taskCollectionService.findAll(userPrincipal.id()))

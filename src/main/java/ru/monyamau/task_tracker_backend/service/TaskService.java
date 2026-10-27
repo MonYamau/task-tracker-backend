@@ -14,6 +14,9 @@ import ru.monyamau.task_tracker_backend.mapper.TaskMapper;
 import ru.monyamau.task_tracker_backend.repository.TaskRepository;
 import ru.monyamau.task_tracker_backend.repository.UserRepository;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
+
 @Slf4j
 @Service
 public class TaskService {
@@ -41,7 +44,8 @@ public class TaskService {
             throw new CustomAuthenticationException("Не удалось найти пользователя по текущему токену");
         }
         User user = userRepository.getReferenceById(userId);
-        Task savedTask = taskRepository.saveAndFlush(new Task(requestDto.title(), requestDto.text(), false, user, null));
+        OffsetDateTime adjustedTime = adjustPlannedCompletionTimeForNewTask(requestDto.plannedCompletionAt());
+        Task savedTask = taskRepository.saveAndFlush(new Task(requestDto.title(), requestDto.text(), false, adjustedTime, user, null));
         log.info("Пользователь с ID {} успешно создал персональную задачу с ID {}", userId, savedTask.getId());
         return taskMapper.toDto(savedTask);
     }
@@ -50,7 +54,7 @@ public class TaskService {
     public TaskResponseDto updateTask(Integer userId, TaskRefRequestDto refRequestDto, TaskFormRequestDto formRequestDto) {
         Task task = taskRepository.findTaskByIdAndOwnerId(refRequestDto.id(), userId).orElseThrow(() ->
                 new TaskNotFoundException("Не удалось найти задачу"));
-        task.update(formRequestDto.title(), formRequestDto.text(), formRequestDto.isReady());
+        task.update(formRequestDto.title(), formRequestDto.text(), formRequestDto.plannedCompletionAt(), formRequestDto.isReady());
         log.info("Пользователь с ID {} успешно изменил персональную задачу с ID {}", userId, task.getId());
         return taskMapper.toDto(task);
     }
@@ -61,5 +65,13 @@ public class TaskService {
                 new TaskNotFoundException("Не удалось найти задачу"));
         taskRepository.delete(task);
         log.info("Пользователь с ID {} успешно удалил персональную задачу с ID {}", userId, task.getId());
+    }
+
+    private OffsetDateTime adjustPlannedCompletionTimeForNewTask(OffsetDateTime clientTime) {
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        if (clientTime == null) {
+            return now;
+        }
+        return clientTime;
     }
 }

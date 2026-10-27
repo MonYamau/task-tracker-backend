@@ -17,6 +17,8 @@ public record TaskResponseDto(
         String text,
         @Schema(description = "Статус готовности персональной задачи")
         boolean isReady,
+        @Schema(description = "Планируемое время выполнения персональной задачи")
+        OffsetDateTime plannedCompletionAt,
         @JsonInclude(NON_NULL)
         @Schema(description = "Время выполнения персональной задачи")
         OffsetDateTime completedAt) {

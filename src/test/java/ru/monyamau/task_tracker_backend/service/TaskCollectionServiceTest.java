@@ -14,6 +14,8 @@ import ru.monyamau.task_tracker_backend.mapper.TaskMapper;
 import ru.monyamau.task_tracker_backend.repository.TaskRepository;
 import ru.monyamau.task_tracker_backend.repository.UserRepository;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 public class TaskCollectionServiceTest extends BaseTestContext {
@@ -36,8 +38,9 @@ public class TaskCollectionServiceTest extends BaseTestContext {
     @Transactional
     @Test
     void shouldFindTasksOfUser() {
-        Task saved1 = taskRepository.save(new Task("testTitle1", "testTest", false, user, null));
-        Task saved2 = taskRepository.save(new Task("testTitle2", "testTest", false, user, null));
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        Task saved1 = taskRepository.save(new Task("testTitle1", "testTest", false, now, user, null));
+        Task saved2 = taskRepository.save(new Task("testTitle2", "testTest", false, now, user, null));
         List<TaskResponseDto> responseDtoList = taskCollectionService.findAll(user.getId());
         Assertions.assertFalse(responseDtoList.isEmpty());
         Assertions.assertTrue(responseDtoList.contains(taskMapper.toDto(saved1)));

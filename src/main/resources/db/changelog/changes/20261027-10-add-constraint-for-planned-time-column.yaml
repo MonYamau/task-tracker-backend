@@ -1,0 +1,14 @@
+databaseChangeLog:
+  - changeSet:
+      comment: Добавление ограничения на нулевое значение для колонки запланированного времени выполнения задачи для таблицы задач
+      id: 20261027-10-add-constraint-for-planned-time-column
+      author: admin
+      changes:
+        - addNotNullConstraint:
+            tableName: tasks
+            columnName: planned_completion_at
+
+      rollback:
+        - dropNotNullConstraint:
+            tableName: tasks
+            columnName: planned_completion_at

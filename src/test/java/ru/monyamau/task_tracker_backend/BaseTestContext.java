@@ -10,9 +10,6 @@ import ru.monyamau.task_tracker_backend.infrastructure.LetterPublisher;
 @SpringBootTest
 @ActiveProfiles("test")
 public abstract class BaseTestContext {
-    @MockitoBean
-    protected LetterPublisher letterPublisher;
-
     @ServiceConnection
     static final PostgreSQLContainer POSTGRES_SQL_CONTAINER = new PostgreSQLContainer("postgres:latest")
             .withDatabaseName("test_db")
@@ -22,4 +19,7 @@ public abstract class BaseTestContext {
     static {
         POSTGRES_SQL_CONTAINER.start();
     }
+
+    @MockitoBean
+    protected LetterPublisher letterPublisher;
 }

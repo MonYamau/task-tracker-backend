@@ -27,6 +27,9 @@ public class Task {
     @Column(name = "STATUS")
     private boolean isReady;
 
+    @Column(name = "PLANNED_COMPLETION_AT", nullable = false)
+    private OffsetDateTime plannedCompletionAt;
+
     @Column(name = "COMPLETED_AT")
     private OffsetDateTime completedAt;
 
@@ -34,17 +37,21 @@ public class Task {
     @JoinColumn(name = "OWNER", referencedColumnName = "ID", nullable = false)
     private User owner;
 
-    public Task(String title, String text, boolean isReady, User owner, OffsetDateTime completedAt) {
+    public Task(String title, String text, boolean isReady, OffsetDateTime plannedCompletionAt, User owner, OffsetDateTime completedAt) {
         this.title = title;
         this.text = text;
         this.isReady = isReady;
+        this.plannedCompletionAt = plannedCompletionAt;
         this.completedAt = completedAt;
         this.owner = owner;
     }
 
-    public void update(String title, String text, boolean isReady) {
+    public void update(String title, String text, OffsetDateTime plannedCompletionAt, boolean isReady) {
         this.title = title;
         this.text = text;
+        if (plannedCompletionAt != null) {
+            this.plannedCompletionAt = plannedCompletionAt;
+        }
         if (!this.isReady && isReady) {
             this.isReady = true;
             this.completedAt = OffsetDateTime.now(ZoneOffset.UTC);
