@@ -28,10 +28,10 @@ public class KafkaLetterProducer implements LetterPublisher {
             Thread.currentThread().interrupt();
             throw new LetterPublisherException("Попытка публикации задачи для отправки письма в Kafka была прервана", e);
         } catch (TimeoutException e) {
-            throw new LetterPublisherException("Не удалось получить подтверждение от Kafka о получении задачи", e);
+            throw new LetterPublisherException("Не удалось получить подтверждение от Kafka о получении задачи для отправки письма", e);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
-            throw new LetterPublisherException("Не удалось опубликовать задачу отправки письма в Kafka", cause);
+            throw new LetterPublisherException("Не удалось опубликовать задачу для отправки письма в Kafka", cause);
         } catch (Exception e) {
             throw new LetterPublisherException("Ошибка при попытке опубликовать задачу для отправки письма в Kafka", e);
         }
