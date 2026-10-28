@@ -33,8 +33,7 @@ public class KafkaLetterProducer implements LetterPublisher {
             Throwable cause = e.getCause();
             throw new LetterPublisherException("Не удалось опубликовать задачу отправки письма в Kafka", cause);
         } catch (Exception e) {
-            throw new LetterPublisherException(
-                    "Ошибка при попытке опубликовать задачу для отправки письма в Kafka", e);
+            throw new LetterPublisherException("Ошибка при попытке опубликовать задачу для отправки письма в Kafka", e);
         }
     }
 }
