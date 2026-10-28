@@ -11,6 +11,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ru.monyamau.task_tracker_backend.dto.response.ErrorDto;
 import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
@@ -32,9 +33,20 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(errorDto);
     }
 
+    @Override
+    protected @Nullable ResponseEntity<Object> handleHandlerMethodValidationException(HandlerMethodValidationException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+        ErrorDto errorDto = new ErrorDto("Validation error");
+        if (!ex.getParameterValidationResults().getFirst().getResolvableErrors().isEmpty()) {
+            errorDto = new ErrorDto(ex.getParameterValidationResults().getFirst().getResolvableErrors().getFirst().getDefaultMessage());
+        }
+        log.warn("Validation error: {}", errorDto.message());
+        return ResponseEntity.status(status)
+                .body(errorDto);
+    }
+
     @ExceptionHandler(InvalidInputException.class)
     public ResponseEntity<ErrorDto> handleInvalidInputException(Exception e) {
-        log.warn("Ошибка некорректного ввода пользователя: {}", e.getMessage());
+        log.warn("Ошибка некорректного ввода: {}", e.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErrorDto(e.getMessage()));
     }

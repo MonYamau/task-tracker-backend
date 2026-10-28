@@ -2,11 +2,12 @@ package ru.monyamau.task_tracker_backend.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.monyamau.task_tracker_backend.dto.request.PeriodTimeRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.TaskInternalResponseDto;
 import ru.monyamau.task_tracker_backend.entity.Task;
+import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 import ru.monyamau.task_tracker_backend.repository.TaskRepository;
 
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
@@ -18,8 +19,11 @@ public class InternalService {
     }
 
     @Transactional(readOnly = true)
-    public List<TaskInternalResponseDto> findAll(PeriodTimeRequestDto requestDto) {
-        List<Task> tasks = taskRepository.findAllForReport(requestDto.from(), requestDto.to());
+    public List<TaskInternalResponseDto> findAll(OffsetDateTime from, OffsetDateTime to) {
+        if (to.isBefore(from)) {
+            throw new InvalidInputException("Время окончания не может быть раньше времени начала");
+        }
+        List<Task> tasks = taskRepository.findAllForReport(from, to);
         return tasks.stream().map(this::convert).toList();
     }
 
