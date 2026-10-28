@@ -29,6 +29,6 @@ public class InternalService {
 
     private TaskInternalResponseDto convert(Task task) {
         return new TaskInternalResponseDto(task.getId(), task.getTitle(), task.getText(), task.isReady(),
-                task.getPlannedCompletionAt(), task.getCompletedAt(), task.getOwner().getId());
+                task.getPlannedCompletionAt(), task.getCompletedAt(), task.getOwner().getId(), task.getOwner().getEmail());
     }
 }

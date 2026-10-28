@@ -18,6 +18,7 @@ public interface TaskRepository extends JpaRepository<Task, Integer> {
     @Query("""
             SELECT task
             FROM Task task
+            JOIN FETCH task.owner
             WHERE (task.isReady = false AND task.plannedCompletionAt >= :from AND task.plannedCompletionAt < :to)
                         OR (task.isReady = true AND task.completedAt >= :from AND task.completedAt < :to)
             """)
