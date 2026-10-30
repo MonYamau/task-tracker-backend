@@ -5,7 +5,7 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.testcontainers.postgresql.PostgreSQLContainer;
-import ru.monyamau.task_tracker_backend.infrastructure.LetterPublisher;
+import ru.monyamau.task_tracker_backend.broker.LetterPublisher;
 
 @SpringBootTest
 @ActiveProfiles("test")

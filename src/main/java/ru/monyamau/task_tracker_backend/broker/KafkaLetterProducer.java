@@ -1,4 +1,4 @@
-package ru.monyamau.task_tracker_backend.infrastructure;
+package ru.monyamau.task_tracker_backend.broker;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
