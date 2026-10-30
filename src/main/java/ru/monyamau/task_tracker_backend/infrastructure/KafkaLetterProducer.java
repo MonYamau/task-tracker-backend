@@ -15,7 +15,7 @@ public class KafkaLetterProducer implements LetterPublisher {
     private final KafkaTemplate<String, LetterMessageDto> kafkaTemplate;
     private final String topic;
 
-    public KafkaLetterProducer(KafkaTemplate<String, LetterMessageDto> kafkaTemplate, @Value("${kafka.topic}") String topic) {
+    public KafkaLetterProducer(KafkaTemplate<String, LetterMessageDto> kafkaTemplate, @Value("${kafka.topics.mailing}") String topic) {
         this.kafkaTemplate = kafkaTemplate;
         this.topic = topic;
     }
