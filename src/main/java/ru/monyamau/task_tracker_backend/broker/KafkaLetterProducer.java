@@ -1,5 +1,6 @@
 package ru.monyamau.task_tracker_backend.broker;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -10,8 +11,11 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+@Slf4j
 @Component
 public class KafkaLetterProducer implements LetterPublisher {
+    private static final long MS_TIMEOUT = 5000L;
+
     private final KafkaTemplate<String, LetterMessageDto> kafkaTemplate;
     private final String topic;
 
@@ -23,7 +27,7 @@ public class KafkaLetterProducer implements LetterPublisher {
     @Override
     public void publishLetterTask(LetterMessageDto messageDto) {
         try {
-            kafkaTemplate.send(topic, messageDto).get(5, TimeUnit.SECONDS);
+            kafkaTemplate.send(topic, messageDto).get(MS_TIMEOUT, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new LetterPublisherException("Попытка публикации задачи для отправки письма в Kafka была прервана", e);
