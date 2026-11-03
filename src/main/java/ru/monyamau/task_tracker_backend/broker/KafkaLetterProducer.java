@@ -8,14 +8,10 @@ import ru.monyamau.task_tracker_backend.dto.response.LetterMessageDto;
 import ru.monyamau.task_tracker_backend.exception.LetterPublisherException;
 
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 
 @Slf4j
 @Component
 public class KafkaLetterProducer implements LetterPublisher {
-    private static final long MS_TIMEOUT = 5000L;
-
     private final KafkaTemplate<String, LetterMessageDto> kafkaTemplate;
     private final String topic;
 
@@ -27,12 +23,10 @@ public class KafkaLetterProducer implements LetterPublisher {
     @Override
     public void publishLetterTask(LetterMessageDto messageDto) {
         try {
-            kafkaTemplate.send(topic, messageDto).get(MS_TIMEOUT, TimeUnit.MILLISECONDS);
+            kafkaTemplate.send(topic, messageDto).get();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             throw new LetterPublisherException("Попытка публикации задачи для отправки письма в Kafka была прервана", e);
-        } catch (TimeoutException e) {
-            throw new LetterPublisherException("Не удалось получить подтверждение от Kafka о получении задачи для отправки письма", e);
         } catch (ExecutionException e) {
             Throwable cause = e.getCause();
             throw new LetterPublisherException("Не удалось опубликовать задачу для отправки письма в Kafka", cause);
