@@ -10,7 +10,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
-import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
@@ -65,7 +64,7 @@ public class JwtTokenProvider {
         } catch (TokenExpiredException e) {
             throw new CustomAuthenticationException("Не удалось аутентифицировать пользователя: срок действия токена истёк");
         } catch (JWTVerificationException e) {
-            throw new InvalidInputException("Не удалось аутентифицировать пользователя: токен не валиден");
+            throw new CustomAuthenticationException("Не удалось аутентифицировать пользователя: токен не валиден");
         }
     }
 }

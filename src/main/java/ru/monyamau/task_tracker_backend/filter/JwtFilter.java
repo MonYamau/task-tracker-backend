@@ -33,7 +33,7 @@ public class JwtFilter extends OncePerRequestFilter {
             try {
                 if (SecurityContextHolder.getContext().getAuthentication() == null) {
                     UserPrincipal principal = jwtTokenProvider.authenticateWithToken(token).orElseThrow(() ->
-                            new IllegalStateException("Не удалось аутентифицировать пользователя по токену: " + token));
+                            new IllegalStateException("Непредвиденная ошибка при попытке аутентификации по JWT токену"));
                     UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                             principal, null, principal.getAuthorities());
                     SecurityContextHolder.getContext().setAuthentication(authenticationToken);
