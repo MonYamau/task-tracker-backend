@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
-import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 
 public class JwtTokenProviderTest {
     @Test
@@ -20,7 +19,7 @@ public class JwtTokenProviderTest {
     }
 
     @Test
-    @DisplayName("Исключение AuthenticationException в случае истекшего токена")
+    @DisplayName("Исключение CustomAuthenticationException в случае истекшего токена")
     public void shouldNotAuthenticateExpiredToken() {
         String email = "test@gmail.com";
         JwtTokenProvider tokenProvider = new JwtTokenProvider("secret", 0);
@@ -30,12 +29,12 @@ public class JwtTokenProviderTest {
     }
 
     @Test
-    @DisplayName("Исключение InvalidInputException в случае невалидного токена")
+    @DisplayName("Исключение CustomAuthenticationException в случае невалидного токена")
     public void shouldNotAuthenticateInvalidToken() {
         String email = "test@gmail.com";
         JwtTokenProvider tokenProvider = new JwtTokenProvider("secret", 10);
         String token = tokenProvider.createFormattedToken(1, email);
         Assertions.assertTrue(token != null && !token.isBlank());
-        Assertions.assertThrows(InvalidInputException.class, () -> tokenProvider.authenticateWithToken(token));
+        Assertions.assertThrows(CustomAuthenticationException.class, () -> tokenProvider.authenticateWithToken(token));
     }
 }
