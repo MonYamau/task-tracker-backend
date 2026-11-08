@@ -40,7 +40,9 @@ public class SecurityConfig {
                         managementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .exceptionHandling(exceptionHandling -> exceptionHandling
                         .authenticationEntryPoint((request, response, authException) ->
-                                exceptionResolver.resolveException(request, response, null, authException)))
+                                exceptionResolver.resolveException(request, response, null, authException))
+                        .accessDeniedHandler((request, response, accessDeniedException) ->
+                                exceptionResolver.resolveException(request, response, null, accessDeniedException)))
                 .authorizeHttpRequests(matcherRegistry ->
                         matcherRegistry
                                 .requestMatchers("/auth/**").permitAll()
