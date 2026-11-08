@@ -1,0 +1,26 @@
+databaseChangeLog:
+  - changeSet:
+      comment: Ограничение длины заголовка и описания задачи
+      id: 20261108-11-correct-columns-for-tasks-table
+      author: admin
+      changes:
+        - modifyDataType:
+            tableName: tasks
+            columnName: title
+            newDataType: VARCHAR(100)
+
+        - modifyDataType:
+            tableName: tasks
+            columnName: text
+            newDataType: VARCHAR(300)
+
+      rollback:
+        - modifyDataType:
+            tableName: tasks
+            columnName: title
+            newDataType: VARCHAR(255)
+
+        - modifyDataType:
+            tableName: tasks
+            columnName: text
+            newDataType: VARCHAR(255)

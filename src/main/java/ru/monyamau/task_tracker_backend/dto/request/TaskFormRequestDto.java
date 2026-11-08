@@ -11,10 +11,10 @@ import java.time.OffsetDateTime;
 public record TaskFormRequestDto(
         @Schema(description = "Заголовок персональной задачи", example = "Сделать покупки")
         @NotBlank(message = "Заголовок не может отсутствовать")
-        @Size(max = 255, message = "Заголовок не может превышать 255 символов")
+        @Size(max = 100, message = "Заголовок не может превышать 100 символов")
         String title,
         @Schema(description = "Описание персональной задачи", example = "Купить молоко, хлеб, дом")
-        @Size(max = 255, message = "Описание не может превышать 255 символов")
+        @Size(max = 300, message = "Описание не может превышать 300 символов")
         String text,
         @Schema(description = "Планируемое время выполнения задачи", example = "2026-10-10T12:00:00Z")
         @FutureOrPresent(message = "Нельзя запланировать выполнение задачи на прошлое")
