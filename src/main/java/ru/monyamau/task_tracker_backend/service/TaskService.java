@@ -17,6 +17,7 @@ import ru.monyamau.task_tracker_backend.repository.UserRepository;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 @Slf4j
 @Service
@@ -55,7 +56,8 @@ public class TaskService {
     public TaskResponseDto updateTask(Integer userId, TaskRefRequestDto refRequestDto, UpdateTaskRequestDto requestDto) {
         Task task = taskRepository.findTaskByIdAndOwnerId(refRequestDto.id(), userId).orElseThrow(() ->
                 new TaskNotFoundException("Не удалось найти задачу"));
-        task.update(requestDto.title(), requestDto.text(), requestDto.plannedCompletionAt(), requestDto.isReady());
+        boolean completion = !(requestDto.isReady() == null || !requestDto.isReady());
+        task.update(requestDto.title(), requestDto.text(), requestDto.plannedCompletionAt(), completion);
         log.info("Пользователь с ID {} успешно изменил персональную задачу с ID {}", userId, task.getId());
         return taskMapper.toDto(task);
     }
@@ -69,7 +71,7 @@ public class TaskService {
     }
 
     private OffsetDateTime adjustPlannedCompletionTimeForNewTask(OffsetDateTime clientTime) {
-        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC);
+        OffsetDateTime now = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MICROS);
         if (clientTime == null) {
             return now;
         }

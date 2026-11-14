@@ -100,7 +100,7 @@ public class TaskControllerTest {
     @Test
     void shouldCreateTaskSuccessfully() throws Exception {
         UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
-        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null, false);
+        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null);
         TaskResponseDto responseDto = new TaskResponseDto(1, "test", "test", false, null, null);
 
         Mockito.when(taskService.saveTask(userPrincipal.id(), requestDto))
@@ -120,7 +120,7 @@ public class TaskControllerTest {
     @Test
     void shouldReturn400InvalidInputWithIncorrectTaskForm() throws Exception {
         UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
-        CreateTaskRequestDto requestDto = new CreateTaskRequestDto(null, "test", null, false);
+        CreateTaskRequestDto requestDto = new CreateTaskRequestDto(null, "test", null);
 
         mockMvc.perform(post("/task")
                         .with(user(userPrincipal))
@@ -135,7 +135,7 @@ public class TaskControllerTest {
 
     @Test
     void shouldReturn401UnauthorizedWithoutAuthenticationForCreateMethod() throws Exception {
-        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null, false);
+        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null);
 
         mockMvc.perform(post("/task")
                         .contentType(MediaType.APPLICATION_JSON)
@@ -150,7 +150,7 @@ public class TaskControllerTest {
     @Test
     void shouldReturn401UnauthorizedWithIncorrectToken() throws Exception {
         UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
-        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null, false);
+        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null);
 
         Mockito.when(taskService.saveTask(userPrincipal.id(), requestDto))
                 .thenThrow(new CustomAuthenticationException("не удалось найти пользователя"));
@@ -187,7 +187,7 @@ public class TaskControllerTest {
     @Test
     void shouldReturn400InvalidInputWithNullNumberIdForChangeMethod() throws Exception {
         UserPrincipal userPrincipal = new UserPrincipal(1, EXAMPLE_EMAIL, EXAMPLE_PASSWORD);
-        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null, false);
+        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null);
 
         mockMvc.perform(patch("/task/{id}", 0)
                         .with(user(userPrincipal))
@@ -201,7 +201,7 @@ public class TaskControllerTest {
 
     @Test
     void shouldReturn401UnauthorizedWithoutAuthenticationForChangeMethod() throws Exception {
-        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null, false);
+        CreateTaskRequestDto requestDto = new CreateTaskRequestDto("test", "test", null);
 
         mockMvc.perform(patch("/task/{id}", 1)
                         .contentType(MediaType.APPLICATION_JSON)

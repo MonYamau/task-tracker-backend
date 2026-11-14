@@ -48,7 +48,7 @@ public class TaskServiceTest extends BaseTestContext {
     @Test
     void shouldSavePersonalTaskSuccessfully() {
         TaskResponseDto responseDto = taskService.saveTask(firstUserId,
-                new CreateTaskRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.getPlannedCompletionAt(), notSavedTestTask.isReady()));
+                new CreateTaskRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.getPlannedCompletionAt()));
         Assertions.assertNotNull(responseDto);
         Assertions.assertTrue(taskRepository.existsById(responseDto.id()));
         Assertions.assertTrue(taskRepository.findTaskByIdAndOwnerId(responseDto.id(), firstUserId).isPresent());
@@ -60,7 +60,7 @@ public class TaskServiceTest extends BaseTestContext {
     void shouldThrowAuthenticationExceptionForSaveMethod() {
         Integer incorrectId = 10;
         Assertions.assertThrows(CustomAuthenticationException.class, () -> taskService.saveTask(incorrectId,
-                new CreateTaskRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.getPlannedCompletionAt(), notSavedTestTask.isReady())));
+                new CreateTaskRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.getPlannedCompletionAt())));
     }
 
     @Test

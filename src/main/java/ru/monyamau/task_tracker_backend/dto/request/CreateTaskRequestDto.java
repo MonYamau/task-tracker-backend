@@ -18,7 +18,5 @@ public record CreateTaskRequestDto(
         String text,
         @Schema(description = "Планируемое время выполнения задачи", example = "2026-10-10T12:00:00Z")
         @FutureOrPresent(message = "Нельзя запланировать выполнение задачи на прошлое")
-        OffsetDateTime plannedCompletionAt,
-        @Schema(description = "Статус готовности персональной задачи")
-        boolean isReady) {
+        OffsetDateTime plannedCompletionAt) {
 }

@@ -18,5 +18,5 @@ public record UpdateTaskRequestDto(
         @Schema(description = "Планируемое время выполнения задачи", example = "2026-10-10T12:00:00Z")
         OffsetDateTime plannedCompletionAt,
         @Schema(description = "Статус готовности персональной задачи")
-        boolean isReady) {
+        Boolean isReady) {
 }
