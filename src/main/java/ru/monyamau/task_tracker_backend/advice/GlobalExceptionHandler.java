@@ -24,6 +24,14 @@ import ru.monyamau.task_tracker_backend.exception.UserAlreadyExistsException;
 @RestControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, @Nullable Object body, HttpHeaders headers, HttpStatusCode statusCode, WebRequest request) {
+        log.warn("Ошибка запроса: {}", ex.getMessage());
+        return ResponseEntity.status(statusCode)
+                .headers(headers)
+                .body(new ErrorDto("Некорректный запрос"));
+    }
+
+    @Override
     protected @Nullable ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
         ErrorDto errorDto = new ErrorDto("Validation error");
         if (ex.getBindingResult().getFieldError() != null) {
