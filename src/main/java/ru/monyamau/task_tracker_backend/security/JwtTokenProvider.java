@@ -49,7 +49,7 @@ public class JwtTokenProvider {
         }
     }
 
-    public Optional<UserPrincipal> authenticateWithToken(String token) {
+    public UserPrincipal authenticateWithToken(String token) {
         JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secret))
                 .withIssuer(ISSUER_NAME)
                 .withSubject(SUBJECT_NAME)
@@ -60,7 +60,7 @@ public class JwtTokenProvider {
             DecodedJWT decodedJWT = verifier.verify(token);
             String email = decodedJWT.getClaim(EMAIL_CLAIM).asString();
             Integer id = decodedJWT.getClaim(ID_CLAIM).asInt();
-            return Optional.of(new UserPrincipal(id, email, null));
+            return new UserPrincipal(id, email, null);
         } catch (TokenExpiredException e) {
             throw new CustomAuthenticationException("Не удалось аутентифицировать пользователя: срок действия токена истёк");
         } catch (JWTVerificationException e) {

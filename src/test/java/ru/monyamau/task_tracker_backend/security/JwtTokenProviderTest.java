@@ -13,7 +13,7 @@ public class JwtTokenProviderTest {
         JwtTokenProvider tokenProvider = new JwtTokenProvider("secret", 10);
         String token = tokenProvider.createFormattedToken(1, email);
         Assertions.assertTrue(token != null && !token.isBlank());
-        UserPrincipal principal = tokenProvider.authenticateWithToken(token.substring(7)).get();
+        UserPrincipal principal = tokenProvider.authenticateWithToken(token.substring(7));
         Assertions.assertEquals(1, (int) principal.id());
         Assertions.assertEquals(email, principal.getUsername());
     }

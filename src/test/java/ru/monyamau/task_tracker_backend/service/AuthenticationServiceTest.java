@@ -35,7 +35,7 @@ public class AuthenticationServiceTest extends BaseTestContext {
     void shouldAuthenticateUserSuccessfully() {
         TokenResponseDto responseDto = authenticationService.authenticateUser(new UserRequestDto(email, password));
         Assertions.assertFalse(responseDto.token().isBlank());
-        UserPrincipal principal = jwtTokenProvider.authenticateWithToken(responseDto.token().substring(7)).get();
+        UserPrincipal principal = jwtTokenProvider.authenticateWithToken(responseDto.token().substring(7));
         Assertions.assertEquals(email, principal.getUsername());
     }
 

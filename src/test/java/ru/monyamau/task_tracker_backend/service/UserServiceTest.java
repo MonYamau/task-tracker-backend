@@ -33,7 +33,7 @@ public class UserServiceTest extends BaseTestContext {
         Assertions.assertTrue(userRepository.existsUserByEmail(email));
         User user = userRepository.findUserByEmail(email).get();
         Assertions.assertTrue(passwordEncoder.matches(password, user.getPassword()));
-        UserPrincipal principal = jwtTokenProvider.authenticateWithToken(responseDto.token().substring(7)).get();
+        UserPrincipal principal = jwtTokenProvider.authenticateWithToken(responseDto.token().substring(7));
         Assertions.assertEquals(email, principal.getUsername());
     }
 
