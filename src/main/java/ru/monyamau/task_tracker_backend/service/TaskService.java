@@ -3,8 +3,9 @@ package ru.monyamau.task_tracker_backend.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.monyamau.task_tracker_backend.dto.request.TaskFormRequestDto;
+import ru.monyamau.task_tracker_backend.dto.request.CreateTaskRequestDto;
 import ru.monyamau.task_tracker_backend.dto.request.TaskRefRequestDto;
+import ru.monyamau.task_tracker_backend.dto.request.UpdateTaskRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
 import ru.monyamau.task_tracker_backend.entity.Task;
 import ru.monyamau.task_tracker_backend.entity.User;
@@ -38,7 +39,7 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponseDto saveTask(Integer userId, TaskFormRequestDto requestDto) {
+    public TaskResponseDto saveTask(Integer userId, CreateTaskRequestDto requestDto) {
         if (!userRepository.existsById(userId)) {
             log.warn("Пользователь с ID {} прошёл аутентификацию фильтра, но отсутствует в базе данных", userId);
             throw new CustomAuthenticationException("Не удалось найти пользователя по текущему токену");
@@ -51,10 +52,10 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponseDto updateTask(Integer userId, TaskRefRequestDto refRequestDto, TaskFormRequestDto formRequestDto) {
+    public TaskResponseDto updateTask(Integer userId, TaskRefRequestDto refRequestDto, UpdateTaskRequestDto requestDto) {
         Task task = taskRepository.findTaskByIdAndOwnerId(refRequestDto.id(), userId).orElseThrow(() ->
                 new TaskNotFoundException("Не удалось найти задачу"));
-        task.update(formRequestDto.title(), formRequestDto.text(), formRequestDto.plannedCompletionAt(), formRequestDto.isReady());
+        task.update(requestDto.title(), requestDto.text(), requestDto.plannedCompletionAt(), requestDto.isReady());
         log.info("Пользователь с ID {} успешно изменил персональную задачу с ID {}", userId, task.getId());
         return taskMapper.toDto(task);
     }

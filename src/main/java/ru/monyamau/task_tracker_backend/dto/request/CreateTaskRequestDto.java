@@ -7,8 +7,8 @@ import jakarta.validation.constraints.Size;
 
 import java.time.OffsetDateTime;
 
-@Schema(description = "Данные персональной задачи для её создания/редактирования")
-public record TaskFormRequestDto(
+@Schema(description = "Данные персональной задачи для её создания")
+public record CreateTaskRequestDto(
         @Schema(description = "Заголовок персональной задачи", example = "Сделать покупки")
         @NotBlank(message = "Заголовок не может отсутствовать")
         @Size(max = 100, message = "Заголовок не может превышать 100 символов")

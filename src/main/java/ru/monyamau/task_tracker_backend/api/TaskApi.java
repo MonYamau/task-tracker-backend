@@ -10,8 +10,9 @@ import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import ru.monyamau.task_tracker_backend.dto.request.TaskFormRequestDto;
+import ru.monyamau.task_tracker_backend.dto.request.CreateTaskRequestDto;
 import ru.monyamau.task_tracker_backend.dto.request.TaskRefRequestDto;
+import ru.monyamau.task_tracker_backend.dto.request.UpdateTaskRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.ErrorDto;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
 import ru.monyamau.task_tracker_backend.security.UserPrincipal;
@@ -43,7 +44,7 @@ public interface TaskApi {
     @ApiResponse(responseCode = "500", description = "Ошибка на стороне сервера",
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     ResponseEntity<TaskResponseDto> create(@AuthenticationPrincipal @Parameter(hidden = true) UserPrincipal userPrincipal,
-                                           @Valid @RequestBody TaskFormRequestDto requestDto);
+                                           @Valid @RequestBody CreateTaskRequestDto requestDto);
 
     @PatchMapping("/{id}")
     @Operation(summary = "Изменить персональную задачу пользователя")
@@ -58,7 +59,7 @@ public interface TaskApi {
             content = @Content(schema = @Schema(implementation = ErrorDto.class)))
     ResponseEntity<TaskResponseDto> edit(@AuthenticationPrincipal @Parameter(hidden = true) UserPrincipal userPrincipal,
                                          @Valid @ModelAttribute(name = "id") TaskRefRequestDto refRequestDto,
-                                         @Valid @RequestBody TaskFormRequestDto formRequestDto);
+                                         @Valid @RequestBody UpdateTaskRequestDto requestDto);
 
     @DeleteMapping("/{id}")
     @Operation(summary = "Удалить персональную задачу пользователя")

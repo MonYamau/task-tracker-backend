@@ -4,8 +4,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import ru.monyamau.task_tracker_backend.api.TaskApi;
-import ru.monyamau.task_tracker_backend.dto.request.TaskFormRequestDto;
+import ru.monyamau.task_tracker_backend.dto.request.CreateTaskRequestDto;
 import ru.monyamau.task_tracker_backend.dto.request.TaskRefRequestDto;
+import ru.monyamau.task_tracker_backend.dto.request.UpdateTaskRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
 import ru.monyamau.task_tracker_backend.security.UserPrincipal;
 import ru.monyamau.task_tracker_backend.service.TaskService;
@@ -25,7 +26,7 @@ public class TaskController implements TaskApi {
     }
 
     @Override
-    public ResponseEntity<TaskResponseDto> create(UserPrincipal userPrincipal, TaskFormRequestDto requestDto) {
+    public ResponseEntity<TaskResponseDto> create(UserPrincipal userPrincipal, CreateTaskRequestDto requestDto) {
         TaskResponseDto responseDto = taskService.saveTask(userPrincipal.id(), requestDto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(responseDto);
@@ -33,8 +34,8 @@ public class TaskController implements TaskApi {
 
     @Override
     public ResponseEntity<TaskResponseDto> edit(UserPrincipal userPrincipal, TaskRefRequestDto refRequestDto,
-                                                TaskFormRequestDto formRequestDto) {
-        TaskResponseDto responseDto = taskService.updateTask(userPrincipal.id(), refRequestDto, formRequestDto);
+                                                UpdateTaskRequestDto requestDto) {
+        TaskResponseDto responseDto = taskService.updateTask(userPrincipal.id(), refRequestDto, requestDto);
         return ResponseEntity.ok(responseDto);
     }
 

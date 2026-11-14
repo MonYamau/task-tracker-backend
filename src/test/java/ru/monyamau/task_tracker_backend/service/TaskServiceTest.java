@@ -6,8 +6,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import ru.monyamau.task_tracker_backend.BaseTestContext;
-import ru.monyamau.task_tracker_backend.dto.request.TaskFormRequestDto;
+import ru.monyamau.task_tracker_backend.dto.request.CreateTaskRequestDto;
 import ru.monyamau.task_tracker_backend.dto.request.TaskRefRequestDto;
+import ru.monyamau.task_tracker_backend.dto.request.UpdateTaskRequestDto;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
 import ru.monyamau.task_tracker_backend.entity.Task;
 import ru.monyamau.task_tracker_backend.entity.User;
@@ -47,7 +48,7 @@ public class TaskServiceTest extends BaseTestContext {
     @Test
     void shouldSavePersonalTaskSuccessfully() {
         TaskResponseDto responseDto = taskService.saveTask(firstUserId,
-                new TaskFormRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.getPlannedCompletionAt(), notSavedTestTask.isReady()));
+                new CreateTaskRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.getPlannedCompletionAt(), notSavedTestTask.isReady()));
         Assertions.assertNotNull(responseDto);
         Assertions.assertTrue(taskRepository.existsById(responseDto.id()));
         Assertions.assertTrue(taskRepository.findTaskByIdAndOwnerId(responseDto.id(), firstUserId).isPresent());
@@ -59,7 +60,7 @@ public class TaskServiceTest extends BaseTestContext {
     void shouldThrowAuthenticationExceptionForSaveMethod() {
         Integer incorrectId = 10;
         Assertions.assertThrows(CustomAuthenticationException.class, () -> taskService.saveTask(incorrectId,
-                new TaskFormRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.getPlannedCompletionAt(), notSavedTestTask.isReady())));
+                new CreateTaskRequestDto(notSavedTestTask.getTitle(), notSavedTestTask.getText(), notSavedTestTask.getPlannedCompletionAt(), notSavedTestTask.isReady())));
     }
 
     @Test
@@ -92,7 +93,7 @@ public class TaskServiceTest extends BaseTestContext {
     void shouldUpdateTaskSuccessfully() {
         Assertions.assertTrue(taskRepository.existsById(testTaskOfFirstUser.getId()));
         TaskResponseDto responseDto = taskService.updateTask(firstUserId,
-                new TaskRefRequestDto(testTaskOfFirstUser.getId()), new TaskFormRequestDto("test", "test", OffsetDateTime.now(ZoneOffset.UTC), false));
+                new TaskRefRequestDto(testTaskOfFirstUser.getId()), new UpdateTaskRequestDto("test", "test", OffsetDateTime.now(ZoneOffset.UTC).plusDays(1), false));
         Assertions.assertEquals(responseDto.id(), testTaskOfFirstUser.getId());
         Assertions.assertEquals(responseDto, new TaskResponseDto(responseDto.id(), "test", "test", false, responseDto.plannedCompletionAt(), null));
     }
@@ -102,11 +103,11 @@ public class TaskServiceTest extends BaseTestContext {
         Assertions.assertTrue(taskRepository.existsById(testTaskOfFirstUser.getId()));
         Assertions.assertNull(testTaskOfFirstUser.getCompletedAt());
         TaskResponseDto responseDto = taskService.updateTask(firstUserId, new TaskRefRequestDto(testTaskOfFirstUser.getId()),
-                new TaskFormRequestDto(testTaskOfFirstUser.getTitle(), testTaskOfFirstUser.getText(), testTaskOfFirstUser.getPlannedCompletionAt(), true));
+                new UpdateTaskRequestDto(testTaskOfFirstUser.getTitle(), testTaskOfFirstUser.getText(), testTaskOfFirstUser.getPlannedCompletionAt(), true));
         Assertions.assertNotNull(testTaskOfFirstUser.getCompletedAt());
         Assertions.assertNotNull(responseDto.completedAt());
         TaskResponseDto responseDto1 = taskService.updateTask(firstUserId, new TaskRefRequestDto(testTaskOfFirstUser.getId()),
-                new TaskFormRequestDto(testTaskOfFirstUser.getTitle(), testTaskOfFirstUser.getText(), testTaskOfFirstUser.getPlannedCompletionAt(), false));
+                new UpdateTaskRequestDto(testTaskOfFirstUser.getTitle(), testTaskOfFirstUser.getText(), testTaskOfFirstUser.getPlannedCompletionAt(), false));
         Assertions.assertNull(responseDto1.completedAt());
         Assertions.assertNull(testTaskOfFirstUser.getCompletedAt());
     }
@@ -115,17 +116,17 @@ public class TaskServiceTest extends BaseTestContext {
     void shouldThrowTaskNotFoundExceptionForUpdateMethod() {
         Integer incorrectTaskId = 10;
         Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.updateTask(firstUserId,
-                new TaskRefRequestDto(incorrectTaskId), new TaskFormRequestDto("test", "test", OffsetDateTime.now(ZoneOffset.UTC), false)));
+                new TaskRefRequestDto(incorrectTaskId), new UpdateTaskRequestDto("test", "test", OffsetDateTime.now(ZoneOffset.UTC), false)));
     }
 
     @Test
     void shouldNotUpdatePersonalTaskOfOtherUser() {
         Assertions.assertTrue(taskRepository.existsById(testTaskOfFirstUser.getId()));
         TaskResponseDto dto = taskService.updateTask(firstUserId, new TaskRefRequestDto(testTaskOfFirstUser.getId()),
-                new TaskFormRequestDto("test", "test", OffsetDateTime.now(ZoneOffset.UTC), false));
+                new UpdateTaskRequestDto("test", "test", OffsetDateTime.now(ZoneOffset.UTC).plusDays(1), false));
         Assertions.assertEquals(dto.id(), testTaskOfFirstUser.getId());
         Assertions.assertThrows(TaskNotFoundException.class, () -> taskService.updateTask(secondUserId,
-                new TaskRefRequestDto(testTaskOfFirstUser.getId()), new TaskFormRequestDto("test1", "test2", OffsetDateTime.now(ZoneOffset.UTC), false)));
+                new TaskRefRequestDto(testTaskOfFirstUser.getId()), new UpdateTaskRequestDto("test1", "test2", OffsetDateTime.now(ZoneOffset.UTC), false)));
         Assertions.assertEquals("test", testTaskOfFirstUser.getTitle());
         Assertions.assertEquals("test", testTaskOfFirstUser.getText());
     }

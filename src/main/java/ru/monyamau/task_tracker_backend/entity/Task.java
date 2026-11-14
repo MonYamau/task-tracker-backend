@@ -4,9 +4,11 @@ import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import ru.monyamau.task_tracker_backend.exception.InvalidInputException;
 
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.temporal.ChronoUnit;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -49,12 +51,15 @@ public class Task {
     public void update(String title, String text, OffsetDateTime plannedCompletionAt, boolean isReady) {
         this.title = title;
         this.text = text;
-        if (plannedCompletionAt != null) {
+        if (plannedCompletionAt != null && !plannedCompletionAt.equals(this.plannedCompletionAt)) {
+            if (plannedCompletionAt.isBefore(OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MICROS))) {
+                throw new InvalidInputException("Нельзя запланировать выполнение задачи на прошлое");
+            }
             this.plannedCompletionAt = plannedCompletionAt;
         }
         if (!this.isReady && isReady) {
             this.isReady = true;
-            this.completedAt = OffsetDateTime.now(ZoneOffset.UTC);
+            this.completedAt = OffsetDateTime.now(ZoneOffset.UTC).truncatedTo(ChronoUnit.MICROS);
         }
         if (this.isReady && !isReady) {
             this.isReady = false;
