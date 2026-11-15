@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import({SecurityConfig.class, JwtFilter.class})
 public class UserControllerTest {
     private static final String EXAMPLE_EMAIL = "example@gmail.com";
-    private static final String EXAMPLE_PASSWORD = "Password123";
+    private static final String EXAMPLE_PASSWORD = "SuperPassword123";
     @MockitoBean
     JwtTokenProvider tokenProvider;
     @MockitoBean
