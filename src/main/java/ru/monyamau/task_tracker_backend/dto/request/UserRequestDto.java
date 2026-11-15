@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
 @Schema(description = "Данные пользователя для аутентификации")
 public record UserRequestDto(
@@ -13,6 +14,7 @@ public record UserRequestDto(
         String email,
         @Schema(description = "Пароль пользователя", example = "QWERTY123!")
         @NotBlank(message = "Пароль не может отсутствовать")
+        @Size(min = 12, max = 28, message = "Пароль должен быть от 12 до 28 символов")
         @Pattern(regexp = "^[A-Za-z0-9_.,+=\\\\—~?!@#$%^&;'-]+$",
                 message = "Пароль может содержать только латинские буквы, цифры и некоторые спецсимволы")
         String password) {
