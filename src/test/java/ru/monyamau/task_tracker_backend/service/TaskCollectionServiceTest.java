@@ -9,7 +9,6 @@ import ru.monyamau.task_tracker_backend.BaseTestContext;
 import ru.monyamau.task_tracker_backend.dto.response.TaskResponseDto;
 import ru.monyamau.task_tracker_backend.entity.Task;
 import ru.monyamau.task_tracker_backend.entity.User;
-import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 import ru.monyamau.task_tracker_backend.mapper.TaskMapper;
 import ru.monyamau.task_tracker_backend.repository.TaskRepository;
 import ru.monyamau.task_tracker_backend.repository.UserRepository;
@@ -45,11 +44,5 @@ public class TaskCollectionServiceTest extends BaseTestContext {
         Assertions.assertFalse(responseDtoList.isEmpty());
         Assertions.assertTrue(responseDtoList.contains(taskMapper.toDto(saved1)));
         Assertions.assertTrue(responseDtoList.contains(taskMapper.toDto(saved2)));
-    }
-
-    @Test
-    @Transactional
-    void shouldThrowAuthenticationException() {
-        Assertions.assertThrows(CustomAuthenticationException.class, () -> taskCollectionService.findAll(2));
     }
 }

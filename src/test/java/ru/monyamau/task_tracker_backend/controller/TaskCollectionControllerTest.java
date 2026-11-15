@@ -5,6 +5,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import ru.monyamau.task_tracker_backend.config.SecurityConfig;
@@ -29,6 +30,8 @@ public class TaskCollectionControllerTest {
     private static final String EXAMPLE_PASSWORD = "Password123";
     @MockitoBean
     JwtTokenProvider tokenProvider;
+    @MockitoBean
+    private UserDetailsService userDetailsService;
     @MockitoBean
     private TaskCollectionService taskCollectionService;
     @Autowired
