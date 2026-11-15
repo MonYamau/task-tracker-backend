@@ -13,7 +13,6 @@ import ru.monyamau.task_tracker_backend.exception.CustomAuthenticationException;
 
 import java.time.ZonedDateTime;
 import java.util.Date;
-import java.util.Optional;
 
 @Slf4j
 @Component
